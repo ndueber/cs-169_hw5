@@ -71,14 +71,16 @@ class Article < Content
     end
   end
 
-
   def merge_files(secondary_article_id)
     secondary_article = Article.find_by_id(secondary_article_id)
-    self.body_and_extended(secondary_article.body)
+    self.extended = secondary_article.body
+    self.body = self.body + secondary_article.body
+    #body_and_extended= secondary_article.body
     secondary_article.comments.each do |c|
       self.add_comment(c)
     end
     Article.find_by_id(secondary_article_id).destroy
+
   end
 
   def set_permalink

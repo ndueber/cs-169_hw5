@@ -9,6 +9,7 @@ class Admin::ContentController < Admin::BaseController
   def merge 
     @article = Article.find(params[:id])
     @article.merge_files(Article.find(params[:merge_with]))
+    redirect_to :action => 'index'
   end
 
   def auto_complete_for_article_keywords
