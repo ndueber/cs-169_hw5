@@ -466,4 +466,13 @@ class Article < Content
     to = to - 1 # pull off 1 second so we don't overlap onto the next day
     return from..to
   end
+  
+  def merge_files(secondary_article_id)
+    secondary_article = Article.find_by_id(secondary_article_id)
+    self.body_and_extended(secondary_article.body)
+    secondary_article.comments.each do |c|
+      self.add_comment(c)
+    end
+    Article.find_by_id(secondary_article_id).destroy
+  end
 end

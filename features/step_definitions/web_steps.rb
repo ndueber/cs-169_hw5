@@ -276,3 +276,34 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+
+################ TODO ###################### 
+
+Given /^I am not an admin$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^I am an admin$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^I merge article '(\d+)' and article '(\d+)'$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see text from article '(\d+)' and article '(\d+)' in article '(\d+)'$/ do |arg1, arg2, arg3|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see that author of merged article is either author of article '(\d+)' or author of article '(\d+)'$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see comments from article '(\d+)' and article '(\d+)' on article '(\d+)'$/ do |arg1, arg2, arg3|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see that title of merged article is either title of article '(\d+)' or title of article '(\d+)'$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
