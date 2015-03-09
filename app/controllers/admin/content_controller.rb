@@ -8,7 +8,12 @@ class Admin::ContentController < Admin::BaseController
 
   def merge 
     @article = Article.find(params[:id])
-    @article.merge_files(Article.find(params[:merge_with]))
+    if not params[:merge_with].empty? and not params[:merge_with].nil? 
+      # we need to make sure not to merge the same file with its self
+      # if not (params[:id].equal? params[:merge_with])
+      @article.merge_files(Article.find(params[:merge_with]))
+      # end
+    end
     redirect_to :action => 'index'
   end
 
