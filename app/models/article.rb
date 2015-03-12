@@ -71,16 +71,17 @@ class Article < Content
     end
   end
 
-  def merge_files(secondary_article_id)
-    if (self.id == secondary_article_id)
+  def merge_files(secondary_article)
+    puts "first #{self.id} secondary: #{secondary_article.id}"
+    if (self.id == secondary_article.id)
       return false
+    else
+      secondary_article = Article.find(secondary_article)
+      self.body = self.body + "\n<!--more-->\n" +secondary_article.body
+      self.comments << secondary_article.comments
+      self.save!
+      Article.find(secondary_article).destroy
     end
-    secondary_article = Article.find_by_id(secondary_article_id)
-    self.extended = secondary_article.body
-    body_and_extended
-    self.comments << secondary_article.comments
-    self.save!
-    Article.find_by_id(secondary_article_id).destroy
   end
 
   def set_permalink
