@@ -43,6 +43,27 @@ Given /^the blog is set up$/ do
                 :state => 'active'})
 end
 
+Given /^a non admin is created$/ do
+  User.create!({:login => 'user',
+                :password => 'aaaaaaaa',
+                :email => 'moe@snow.com',
+                :profile_id => 3,
+                :name => 'user',
+                :state => 'active'})
+end
+
+And /^I am logged in as a non admin$/ do
+  visit '/accounts/login'
+  fill_in 'user_login', :with => 'user'
+  fill_in 'user_password', :with => 'aaaaaaaa'
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+end
+
 And /^I wait a bit$/ do 
   sleep 0.5
 end

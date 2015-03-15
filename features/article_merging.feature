@@ -23,6 +23,8 @@ Feature: Articles Merging
 #   5. The title of the new article should be the title from either one of the merged articles.
 
   Scenario: non-admin cannot merge articles
+    # Given a non admin is created
+    # And I am logged in as a non admin
     Then I go to the login page
     And I fill in "user[login]" with "yoda"
     And I fill in "user[password]" with "asdf123"
