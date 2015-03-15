@@ -43,6 +43,10 @@ Given /^the blog is set up$/ do
                 :state => 'active'})
 end
 
+And /^I wait a bit$/ do 
+  sleep 0.5
+end
+
 And /^I am logged into the admin panel$/ do
   visit '/accounts/login'
   fill_in 'user_login', :with => 'admin'
@@ -126,13 +130,13 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
   attach_file(field, File.expand_path(path))
 end
 
-Then /^(?:|I )should see "([^"]*)"$/ do |text|
-  if page.respond_to? :should
-    page.should have_content(text)
-  else
-    assert page.has_content?(text)
-  end
-end
+# Then /^(?:|I )should see "([^"]*)"$/ do |text|
+#   if page.respond_to? :should
+#     page.should have_content(text)
+#   else
+#     assert page.has_content?(text)
+#   end
+# end
 
 Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
@@ -280,6 +284,51 @@ end
 
 ################ TODO ###################### 
 
+Then /^(?:|I )should see "(.*)" or "(.*)"$/ do |text1, text2|
+  assert (page.has_content?(text1) or page.has_content?(text2))
+end
+
+Then /^(?:|I )should see "([^"]*)"$/ do |text|
+  if page.respond_to? :should
+    page.should have_content(text)
+  else
+    assert page.has_content?(text)
+  end
+end
+
+Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
+  regexp = Regexp.new(regexp)
+
+  if page.respond_to? :should
+    page.should have_xpath('//*', :text => regexp)
+  else
+    assert page.has_xpath?('//*', :text => regexp)
+  end
+end
+
+Then /^(?:|I )should not see "([^"]*)"$/ do |text|
+  if page.respond_to? :should
+    page.should have_no_content(text)
+  else
+    assert page.has_no_content?(text)
+  end
+end
+
+Then /^(?:|I )should not see \/([^\/]*)\/$/ do |regexp|
+  regexp = Regexp.new(regexp)
+  if page.respond_to? :should
+    page.should have_no_xpath('//*', :text => regexp)
+  else
+    assert page.has_no_xpath?('//*', :text => regexp)
+  end
+end
+
+
+
+
+
+
+####################### GARBAGE BELOW #########################################
 Given /^I am not an admin$/ do
   pending # express the regexp above with the code you wish you had
 end

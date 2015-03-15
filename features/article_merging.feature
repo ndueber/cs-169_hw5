@@ -3,6 +3,10 @@ Feature: Articles Merging
   In order to aggregate similar topics into one place
   I want to merge two similar articles
   
+  Background:
+    Given the blog is set up
+    And I am logged into the admin panel
+  
 #   Scenarios: To do this properly, we want to keep the following in mind:
 #   1. A non-admin cannot merge articles.
 #   2. When articles are merged, the merged article should contain the text of both previous articles.
@@ -10,18 +14,32 @@ Feature: Articles Merging
 #   4. Comments on each of the two original articles need to all carry over and point to the new, merged article.
 #   5. The title of the new article should be the title from either one of the merged articles.
 
-  Scenario: non-admin cannot merge articles
-    Given I am not an admin
-    Then I should see "article 1"
-    And I should not see "merge articles"
+  # Scenario: non-admin cannot merge articles
+  #   And I am not logged
+  #   Then I should see "article 1"
+  #   And I should not see "merge articles"
   
   Scenario: merged article contains the text from both parent articles
-    Given I am an admin
-    And I merge article '1' and article '2'
-    Then I should see text from article '1' and article '2' in article '3'
-    
+    Given the following articles exist:
+      | user_id  | title                           | body                         | author            |
+      | 1        | Cool Title Bro                  | cool content                 | yoda              |
+      | 1        | I dont like this title          | This is some bad content     | captain falcon    |
+    Then I go to the admin content page 
+    And I wait a bit
+    And I should see "Manage"
+    And I follow "Cool Title Bro"
+    And I merge article "2"
+    Then I go to the admin content page
+    Then I should not see "I dont like this title"
+    And I follow "Cool Title Bro"
+    Then I should see "This is some bad content"
+    And I should see "cool content"
+
   Scenario: a merged article has a single author (either of original authors)
-    Given I am an admin
+    Given the following articles exist:
+      | user_id  | title                           | body                         | author            |
+      | 1        | Cool Title Bro                  | cool content                 | yoda              |
+      | 1        | I dont like this title          | This is some bad content     | captain falcon    |
     And I merge article '1' and article '2'
     Then I should see that author of merged article is either author of article '1' or author of article '2'
     
