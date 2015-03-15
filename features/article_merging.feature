@@ -23,7 +23,12 @@ Feature: Articles Merging
 #   5. The title of the new article should be the title from either one of the merged articles.
 
   Scenario: non-admin cannot merge articles
+    Given I go to the login page
+    And I fill in "user[login]" with "user1"
+    And I fill in "user[password]" with "asdf123"
+    Then I press "Login"
     And I go to the edit page of article given id "3"
+    Then show me the page
     Then I should see "Article1"
     And I should not see "Merge"
   

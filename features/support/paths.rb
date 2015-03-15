@@ -22,6 +22,8 @@ module NavigationHelpers
       # '/admin/content'
     when /^the list all articles page$/
       '/category/general'
+    when /^the login page$/
+       '/accounts/login'
       
     when /^the edit page of article given id "(.*)"$/
       "/admin/content/edit/#{$1}" 
