@@ -7,13 +7,13 @@ Feature: Articles Merging
     Given the blog is set up
     Given the following users exist:
       | profile_id | login | name  | password | email             | state  |
-      | 2          | user1 | User1 | asdf123  | user1@example.com | active |
+      | 2          | yoda  | User1 | asdf123  | yoda@example.com | active |
       | 3          | user2 | User2 | asdf222  | user2@example.com | active |
     
     Given the following articles exist:
-      | id | title    | author         | user_id | body     | state     |
-      | 3  | Article1 | yoda           | 2       | Content1 | published |
-      | 4  | Article2 | captain falcon | 3       | Content2 | published |
+      | id | title    | author         | user_id | body     | state     | type    |
+      | 3  | Article1 | yoda           | 2       | Content1 | published | article |
+      | 4  | Article2 | captain falcon | 3       | Content2 | published | article |
   
 #   Scenarios: To do this properly, we want to keep the following in mind:
 #   1. A non-admin cannot merge articles.
@@ -23,14 +23,13 @@ Feature: Articles Merging
 #   5. The title of the new article should be the title from either one of the merged articles.
 
   Scenario: non-admin cannot merge articles
-    Given I go to the login page
-    And I fill in "user[login]" with "user1"
+    Then I go to the login page
+    And I fill in "user[login]" with "yoda"
     And I fill in "user[password]" with "asdf123"
     Then I press "Login"
     And I go to the edit page of article given id "3"
-    Then show me the page
-    Then I should see "Article1"
-    And I should not see "Merge"
+    Then I should see "Logged in as"
+    But I should not see "Merge"
   
   Scenario: merged article contains the text from both parent articles
     Given I am logged into the admin panel
