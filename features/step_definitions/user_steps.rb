@@ -11,3 +11,9 @@ When /^I am signed in$/ do
   step %Q{I fill in "Password confirmation" with "helloworld"}
   step %Q{I press "Sign up"}
 end
+
+Given /the following users exist:$/ do |table|
+  table.hashes.each do |element|
+    User.create(element)
+  end
+end

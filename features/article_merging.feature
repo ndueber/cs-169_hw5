@@ -5,7 +5,15 @@ Feature: Articles Merging
   
   Background:
     Given the blog is set up
-    And I am logged into the admin panel
+    Given the following users exist:
+      | profile_id | login | name  | password | email             | state  |
+      | 2          | user1 | User1 | asdf123  | user1@example.com | active |
+      | 3          | user2 | User2 | asdf222  | user2@example.com | active |
+    
+    Given the following articles exist:
+      | id | title    | author         | user_id | body     | state     |
+      | 3  | Article1 | yoda           | 2       | Content1 | published |
+      | 4  | Article2 | captain falcon | 3       | Content2 | published |
   
 #   Scenarios: To do this properly, we want to keep the following in mind:
 #   1. A non-admin cannot merge articles.
@@ -14,41 +22,53 @@ Feature: Articles Merging
 #   4. Comments on each of the two original articles need to all carry over and point to the new, merged article.
 #   5. The title of the new article should be the title from either one of the merged articles.
 
-  # Scenario: non-admin cannot merge articles
-  #   And I am not logged
-  #   Then I should see "article 1"
-  #   And I should not see "merge articles"
+  Scenario: non-admin cannot merge articles
+    And I go to the edit page of article given id "3"
+    Then I should see "Article1"
+    And I should not see "Merge"
   
   Scenario: merged article contains the text from both parent articles
-    Given the following articles exist:
-      | user_id  | title                           | body                         | author            |
-      | 1        | Cool Title Bro                  | cool content                 | yoda              |
-      | 1        | I dont like this title          | This is some bad content     | captain falcon    |
-    Then I go to the admin content page 
-    And I wait a bit
-    And I should see "Manage"
-    And I follow "Cool Title Bro"
-    And I merge article "2"
+    Given I am logged into the admin panel
+    And I go to the edit page of article given id "3"
+    And I merge article "4"
     Then I go to the admin content page
-    Then I should not see "I dont like this title"
-    And I follow "Cool Title Bro"
-    Then I should see "This is some bad content"
-    And I should see "cool content"
+    Then I should not see "Article2"
+    Then the article with id "4" does not exist
+    And I follow "Article1"
+    Then I should see "Content1"
+    And I should see "Content2"
 
   Scenario: a merged article has a single author (either of original authors)
-    Given the following articles exist:
-      | user_id  | title                           | body                         | author            |
-      | 1        | Cool Title Bro                  | cool content                 | yoda              |
-      | 1        | I dont like this title          | This is some bad content     | captain falcon    |
-    And I merge article '1' and article '2'
-    Then I should see that author of merged article is either author of article '1' or author of article '2'
+    And the article with id "3" and "4" are merged
+    And the following author of "Article1" is "yoda"
+    Then the article with id "4" does not exist
     
   Scenario: merged articles should carry over comments from original articles
-    Given I am an admin
-    And I merge article '1' and article '2'
-    Then I should see comments from article '1' and article '2' on article '3'
+  	And I am on the home page
+  	Then I should see "Article1"
+    Then I follow "Article1"
+    Then I fill in "comment[author]" with "Samuel Clemens"
+  	Then I fill in "comment[email]" with "whatsup@youknowwhatitis.com"
+  	Then I fill in "comment[url]" with "google.com"
+  	Then I fill in "comment[body]" with "my great comment"
+  	Then I press "comment"
+  	And I am on the home page
+  	Then I should see "Article2"
+    Then I follow "Article2"
+    Then I fill in "comment[author]" with "Samuel Jackson"
+  	Then I fill in "comment[email]" with "whatsup@yes.com"
+  	Then I fill in "comment[url]" with "yahoo.com"
+  	Then I fill in "comment[body]" with "love me!"
+  	Then I press "comment"
+  	And the article with id "3" and "4" are merged
+  	Then the article with id "4" does not exist
+  	Then I am on the home page
+  	Then I should see "Article1"
+  	Then I follow "Article1"
+  	Then I should see "my great comment"
+  	And I should see "love me!"
   
   Scenario: title of new article is the same as one of the original articles
-    Given I am an admin
-    And I merge article '1' and article '2'
-    Then I should see that title of merged article is either title of article '1' or title of article '2'
+    And the article with id "3" and "4" are merged
+    And the following author of "Article1" is "yoda"
+    Then the article with id "4" does not exist
